@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: sock-shop
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+spec:
+  tls:
+    - hosts:
+        - microservice.tijaniahmed.me
+      secretName: acme-crt-prod
+  rules:
+    - host: microservice.tijaniahmed.me
+      http:
+        paths:
+          - path: /sock_shop
+            pathType: Prefix
+            backend:
+              service:
+                name: front-end
+                namespace: sock-shop
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress-1
+  namespace: mern-app
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+spec:
+  tls:
+    - hosts:
+        - microservice.tijaniahmed.me
+      secretName: acme-crt-prod
+  rules:
+    - host: microservice.tijaniahmed.me
+      http:
+        paths:
+          - path: /mern
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
